@@ -13,6 +13,7 @@ public class Testy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         string Test()
         {
             return "Test";
@@ -21,6 +22,7 @@ public class Testy : MonoBehaviour
         Debug.Log(Test());
     }
 
+    /*
     public static T[] GetComponentsInHierarchy<T>(this GameObject go)
     {
         List<T> components = new List<T>();
@@ -31,4 +33,5 @@ public class Testy : MonoBehaviour
         }
         return components.ToArray();
     }
+    */
 }
