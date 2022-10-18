@@ -156,4 +156,23 @@ public static class MyFunctions
         point = dir + pivot;
         return point;
     }
+
+    public static void IgnoreAllCollisions(Transform object1, Transform object2)
+    {
+        IgnoreAllCollisions(object1, object2, true);
+    }
+
+    public static void IgnoreAllCollisions(Transform object1, Transform object2, bool ignore)
+    {
+        Collider[] colliders1 = object1.GetComponentsInChildren<Collider>();
+        Collider[] colliders2 = object2.GetComponentsInChildren<Collider>();
+
+        foreach (Collider c1 in colliders1)
+        {
+            foreach (Collider c2 in colliders2)
+            {
+                Physics.IgnoreCollision(c1, c2, ignore);
+            }
+        }
+    }
 }

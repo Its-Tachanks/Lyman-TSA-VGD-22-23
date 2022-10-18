@@ -19,9 +19,12 @@ public class Ball : MonoBehaviour, ISelectable
             {
                 rend.material.color = hoverColor;
             }
-            else if (!isSelected)
+            else
             {
-                rend.material.color = defaultColor;
+                if (!isSelected)
+                {
+                    rend.material.color = defaultColor;
+                }
             }
         }
     }
@@ -40,11 +43,15 @@ public class Ball : MonoBehaviour, ISelectable
             if (isSelected)
             {
                 rend.material.color = selectedColor;
-                LaunchUp();
+                Player.instance.Pickup(this);
             }
-            else if (!isHovered)
+            else
             {
-                rend.material.color = defaultColor;
+                LaunchForward();
+                if (!isHovered)
+                {
+                    rend.material.color = defaultColor;
+                }
             }
         }
     }
@@ -52,6 +59,7 @@ public class Ball : MonoBehaviour, ISelectable
     [SerializeField] private Rigidbody rb;
     [SerializeField] private MeshRenderer rend;
     [SerializeField, Range(0, 20)] private float launchSpeed;
+    [SerializeField] private float verticalBoost;
 
     private Color defaultColor;
     [SerializeField] private Color hoverColor;
@@ -68,5 +76,10 @@ public class Ball : MonoBehaviour, ISelectable
     private void LaunchUp()
     {
         rb.AddForce(Vector3.up * launchSpeed, ForceMode.Impulse);
+    }
+
+    private void LaunchForward()
+    {
+        rb.AddForce((Camera.main.transform.forward + new Vector3(0f, verticalBoost, 0f)).normalized * launchSpeed, ForceMode.Impulse);
     }
 }

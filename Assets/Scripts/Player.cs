@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     [SerializeField, Range(1, 20)] private float airSpeed;
     [SerializeField] private float shiftMultiplier;
     [SerializeField, Range(1,100)] private float acceleration;
+    [SerializeField, Range(1, 100)] private float airAcceleration;
     [SerializeField, Range(1,20)] private float drag;
     [SerializeField, Range(0, 20)] private float airDrag;
     private float yaw = 0f, pitch = 0f;
@@ -32,6 +33,15 @@ public class Player : MonoBehaviour
         }
     }
 
+    private float Acceleration
+    {
+        get
+        {
+            if (isGrounded) return acceleration;
+            return airAcceleration;
+        }
+    }
+
     private float Drag
     {
         get
@@ -41,7 +51,12 @@ public class Player : MonoBehaviour
         }
     }
 
+    [Header("Selection")]
     private ISelectable currentObject;
+    private ISelectable holdingObject;
+    [SerializeField] private GameObject hand;
+    [SerializeField, Range(0, 100)] private float selectionRange;
+    [SerializeField, Range(1, 100)] private float pickupSpeed;
 
     [Header("Jumping")]
     [SerializeField, Range(0.01f, 1)] private float feetRadius;
@@ -51,6 +66,20 @@ public class Player : MonoBehaviour
     [SerializeField, Range(0.01f, 1)] private float jumpCooldown;
 
     [SerializeField, Range(1, 100)] private float jumpForce;
+
+    public static Player instance { get; private set; }
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Debug.LogError("Multiple Players in Scene");
+        }
+    }
 
     private void Start()
     {
@@ -68,7 +97,19 @@ public class Player : MonoBehaviour
         ClampSpeed();
 
         Raycast();
-        if (Input.GetMouseButton(0)) SelectObject();
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (holdingObject == null)
+            {
+                SelectObject();
+            }
+            else
+            {
+                UnSelectObject();
+            }
+        }
+
+        if (holdingObject == null) hand.GetComponent<Joint>().connectedBody = null;
 
         CheckForGround();
 
@@ -86,7 +127,7 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.A)) right--;
 
         Vector3 movementDir = transform.forward * forward + transform.right * right;
-        rb.AddForce(movementDir.normalized * MoveSpeed * acceleration, ForceMode.Force);
+        rb.AddForce(movementDir.normalized * MoveSpeed * Acceleration, ForceMode.Force);
     }
 
     private void ClampSpeed()
@@ -112,7 +153,7 @@ public class Player : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 100))
+        if (Physics.Raycast(ray, out hit, selectionRange))
         {
             ISelectable select;
             if (hit.transform.gameObject.TryGetComponent<ISelectable>(out select))
@@ -133,10 +174,10 @@ public class Player : MonoBehaviour
 
     void UnHover()
     {
-        if (currentObject == null) return;
+        if (currentObject == null || holdingObject != null) return;
 
         currentObject.IsHovered = false;
-        currentObject.IsSelected = false;
+        if (currentObject.IsSelected) currentObject.IsSelected = false;
         currentObject = null;
     }
 
@@ -145,6 +186,39 @@ public class Player : MonoBehaviour
         if (currentObject == null) return;
 
         currentObject.IsSelected = !currentObject.IsSelected;
+    }
+
+    void UnSelectObject()
+    {
+        (holdingObject as MonoBehaviour).transform.parent = null;
+        holdingObject.IsSelected = false;
+        hand.GetComponent<Joint>().connectedBody = null;
+        MyFunctions.IgnoreAllCollisions(transform, (holdingObject as MonoBehaviour).transform, false);
+        holdingObject = null;
+    }
+
+
+    public void Pickup(ISelectable obj)
+    {
+        holdingObject = obj;
+        MonoBehaviour objM = obj as MonoBehaviour;
+        objM.transform.parent = hand.transform;
+        StartCoroutine(MoveObjectToOrigin(objM.transform));
+        MyFunctions.IgnoreAllCollisions(transform, objM.transform);
+    }
+
+    IEnumerator MoveObjectToOrigin(Transform obj)
+    {
+        Rigidbody oRb = obj.gameObject.GetComponent<Rigidbody>();
+        oRb.isKinematic = true;
+        while (obj.localPosition.magnitude > 0.05f)
+        {
+            obj.localPosition = Vector3.MoveTowards(obj.localPosition, Vector3.zero, pickupSpeed * Time.deltaTime);
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+        obj.localPosition = Vector3.zero;
+        oRb.isKinematic = false;
+        hand.GetComponent<Joint>().connectedBody = oRb;
     }
 
     void CheckForGround()
