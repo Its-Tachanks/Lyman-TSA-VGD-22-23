@@ -55,12 +55,12 @@ public class Player : MonoBehaviour
         }
     }
 
-    [Header("Selection")]
-    private ISelectable currentObject;
-    private ISelectable holdingObject;
+    [Header("Selection")] 
     [SerializeField] private GameObject hand;
     [SerializeField, Range(0, 100)] private float selectionRange;
     [SerializeField, Range(1, 100)] private float pickupSpeed;
+    private ISelectable currentObject;
+    private ISelectable holdingObject;
 
     [Header("Jumping")]
     [SerializeField, Range(0.01f, 1)] private float feetRadius;
