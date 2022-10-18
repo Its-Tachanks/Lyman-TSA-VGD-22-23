@@ -116,6 +116,7 @@ public class Player : MonoBehaviour
             else
             {
                 UnSelectObject();
+                if (currentObject != null) SelectObject();
             }
         }
 
@@ -167,8 +168,6 @@ public class Player : MonoBehaviour
     //Selection ray
     void Raycast()
     {
-        if (holdingObject != null) return;
-
         //Create a ray from the camera to where the mouse is pointing
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -195,10 +194,9 @@ public class Player : MonoBehaviour
 
     void UnHover()
     {
-        if (currentObject == null || holdingObject != null) return;
+        if (currentObject == null) return;
 
         currentObject.IsHovered = false;
-        if (currentObject.IsSelected) currentObject.IsSelected = false;
         currentObject = null;
     }
 
