@@ -22,6 +22,10 @@ public class Player : MonoBehaviour
     [SerializeField, Range(0, 20)] private float airDrag;
     private float yaw = 0f, pitch = 0f;
 
+    /*
+     * These properties should be used instead of drag, moveSpeed, etc
+     * They account for whether the object is in the air or not
+     */
     private float MoveSpeed
     {
         get
@@ -71,6 +75,7 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
+        //setting up static instance
         if (instance == null)
         {
             instance = this;
@@ -83,12 +88,17 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        //assigning references if not done already
         if (rb == null) rb = GetComponent<Rigidbody>();
         if (cam == null) cam = GetComponentInChildren<Camera>();
 
+        //Cursor is gone
         Cursor.lockState = CursorLockMode.Locked;
     }
 
+    /*Update is called every frame update
+     *Code in here runs often
+     */
     private void Update()
     {
         UpdateRotation();
@@ -97,7 +107,7 @@ public class Player : MonoBehaviour
         ClampSpeed();
 
         Raycast();
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0)) //OnClick
         {
             if (holdingObject == null)
             {
@@ -118,18 +128,22 @@ public class Player : MonoBehaviour
         rb.drag = Drag;      
     }
 
+    //Move the player
     private void Move()
     {
+        //Check where the player wants to go
         int forward = 0, right = 0;
         if (Input.GetKey(KeyCode.W)) forward++;
         if (Input.GetKey(KeyCode.S)) forward--;
         if (Input.GetKey(KeyCode.D)) right++;
         if (Input.GetKey(KeyCode.A)) right--;
 
+        //Apply a force to move player in desired direction
         Vector3 movementDir = transform.forward * forward + transform.right * right;
         rb.AddForce(movementDir.normalized * MoveSpeed * Acceleration, ForceMode.Force);
     }
 
+    //prevent the player's speed from being > MoveSpeed
     private void ClampSpeed()
     {
         Vector3 vel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
@@ -140,6 +154,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    //Changes where the player is looking based on the mouse position
     private void UpdateRotation()
     {
         yaw += horizontalRotateSpeed * Input.GetAxis("Mouse X");
@@ -149,15 +164,19 @@ public class Player : MonoBehaviour
         transform.eulerAngles = new Vector3(0f, yaw, 0f);
     }
 
+    //Selection ray
     void Raycast()
     {
+        //Create a ray from the camera to where the mouse is pointing
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, selectionRange))
+        if (Physics.Raycast(ray, out hit, selectionRange)) //did we hit something?
         {
             ISelectable select;
+            //did we hit something that is Selectable?
             if (hit.transform.gameObject.TryGetComponent<ISelectable>(out select))
             {
+                //hover over that object
                 currentObject = select;
                 currentObject.IsHovered = true;
             }
@@ -190,10 +209,13 @@ public class Player : MonoBehaviour
 
     void UnSelectObject()
     {
-        (holdingObject as MonoBehaviour).transform.parent = null;
+        (holdingObject as MonoBehaviour).transform.parent = null; //unparent object from hand
         holdingObject.IsSelected = false;
-        hand.GetComponent<Joint>().connectedBody = null;
+        hand.GetComponent<Joint>().connectedBody = null; //Unlink object from hand
+
+        //renable collisions between object and player
         MyFunctions.IgnoreAllCollisions(transform, (holdingObject as MonoBehaviour).transform, false);
+        
         holdingObject = null;
     }
 
@@ -202,35 +224,47 @@ public class Player : MonoBehaviour
     {
         holdingObject = obj;
         MonoBehaviour objM = obj as MonoBehaviour;
-        objM.transform.parent = hand.transform;
+        objM.transform.parent = hand.transform; //set object's parent to hand
         StartCoroutine(MoveObjectToOrigin(objM.transform));
+
+        //ignore collisions between object and player
         MyFunctions.IgnoreAllCollisions(transform, objM.transform);
     }
 
     IEnumerator MoveObjectToOrigin(Transform obj)
     {
         Rigidbody oRb = obj.gameObject.GetComponent<Rigidbody>();
-        oRb.isKinematic = true;
+        oRb.isKinematic = true; //obj is not affected by forces
+        /*
+         * while the object isnt close enough to hand
+         * move the object a little closer evey frame
+         */
         while (obj.localPosition.magnitude > 0.05f)
         {
             obj.localPosition = Vector3.MoveTowards(obj.localPosition, Vector3.zero, pickupSpeed * Time.deltaTime);
             yield return new WaitForSeconds(Time.deltaTime);
         }
-        obj.localPosition = Vector3.zero;
-        oRb.isKinematic = false;
-        hand.GetComponent<Joint>().connectedBody = oRb;
+        //close enough now
+        obj.localPosition = Vector3.zero; //set actual position to (0,0,0) instead of close enough
+        oRb.isKinematic = false; //renable forces on obj
+        hand.GetComponent<Joint>().connectedBody = oRb; //link obj to hand
     }
 
     void CheckForGround()
     {
+        //gets all colliders within feetRadius of the feet that are considered to be ground
         Collider[] collisions = Physics.OverlapSphere(feet.position, feetRadius, groundLayer);
+        
+        //did we find any colliders at all?
         isGrounded = collisions.Length > 0;
     }
 
     void Jump()
     {
+        //if we are in the air or the cooldown isn't ready, dont't jump
         if (!isGrounded || !readyToJump) return;
 
+        //adds a vertical force
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
         readyToJump = false;
         Invoke(nameof(ResetJump), jumpCooldown);

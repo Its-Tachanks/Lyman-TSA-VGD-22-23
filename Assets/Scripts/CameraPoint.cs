@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ *  Old code to control the camera when there was no player
+ */
 public class CameraPoint : MonoBehaviour
 {
 

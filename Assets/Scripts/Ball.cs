@@ -5,7 +5,7 @@ using UnityEngine;
 public class Ball : MonoBehaviour, ISelectable
 {
     private bool isHovered;
-    public bool IsHovered
+    public bool IsHovered //Implementation of ISelectable
     {
         get
         {
@@ -15,11 +15,11 @@ public class Ball : MonoBehaviour, ISelectable
         {
             isHovered = value;
 
-            if (isHovered && !isSelected)
+            if (isHovered && !isSelected) //OnHover
             {
                 rend.material.color = hoverColor;
             }
-            else
+            else //OnUnHover
             {
                 if (!isSelected)
                 {
@@ -30,7 +30,7 @@ public class Ball : MonoBehaviour, ISelectable
     }
 
     private bool isSelected;
-    public bool IsSelected
+    public bool IsSelected //Implementation of ISelectable
     {
         get
         {
@@ -40,12 +40,12 @@ public class Ball : MonoBehaviour, ISelectable
         {
             isSelected = value;
 
-            if (isSelected)
+            if (isSelected) //OnSelect
             {
                 rend.material.color = selectedColor;
                 Player.instance.Pickup(this);
             }
-            else
+            else //OnDeselect
             {
                 LaunchForward();
                 if (!isHovered)
@@ -65,6 +65,7 @@ public class Ball : MonoBehaviour, ISelectable
     [SerializeField] private Color hoverColor;
     [SerializeField] private Color selectedColor;
 
+    //get references if not assgined
     private void Start()
     {
         if (rb == null) rb = GetComponent<Rigidbody>();
@@ -73,11 +74,13 @@ public class Ball : MonoBehaviour, ISelectable
         defaultColor = rend.material.color;
     }
 
+    //apply a vertical force
     private void LaunchUp()
     {
         rb.AddForce(Vector3.up * launchSpeed, ForceMode.Impulse);
     }
 
+    //apply a slightly up forward force
     private void LaunchForward()
     {
         rb.AddForce((Camera.main.transform.forward + new Vector3(0f, verticalBoost, 0f)).normalized * launchSpeed, ForceMode.Impulse);
