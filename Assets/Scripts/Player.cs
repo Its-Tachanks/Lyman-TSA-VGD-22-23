@@ -209,6 +209,8 @@ public class Player : MonoBehaviour
 
     void UnSelectObject()
     {
+        if (hand.GetComponent<Joint>().connectedBody == null) return;
+
         (holdingObject as MonoBehaviour).transform.parent = null; //unparent object from hand
         holdingObject.IsSelected = false;
         hand.GetComponent<Joint>().connectedBody = null; //Unlink object from hand
