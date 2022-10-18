@@ -177,6 +177,8 @@ public class Player : MonoBehaviour
             //did we hit something that is Selectable?
             if (hit.transform.gameObject.TryGetComponent(out select))
             {
+                if (currentObject != select) UnHover();
+
                 //hover over that object
                 currentObject = select;
                 currentObject.IsHovered = true;
