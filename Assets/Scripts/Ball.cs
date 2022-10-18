@@ -25,6 +25,10 @@ public class Ball : MonoBehaviour, ISelectable
                 {
                     rend.material.color = defaultColor;
                 }
+                else
+                {
+                    rend.material.color = selectedColor;
+                }
             }
         }
     }
@@ -52,6 +56,10 @@ public class Ball : MonoBehaviour, ISelectable
                 {
                     rend.material.color = defaultColor;
                 }
+                else
+                {
+                    rend.material.color = hoverColor;
+                }
             }
         }
     }
@@ -73,6 +81,7 @@ public class Ball : MonoBehaviour, ISelectable
 
         defaultColor = rend.material.color;
     }
+
 
     //apply a vertical force
     private void LaunchUp()

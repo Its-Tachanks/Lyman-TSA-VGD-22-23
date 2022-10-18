@@ -167,6 +167,8 @@ public class Player : MonoBehaviour
     //Selection ray
     void Raycast()
     {
+        if (holdingObject != null) return;
+
         //Create a ray from the camera to where the mouse is pointing
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -174,7 +176,7 @@ public class Player : MonoBehaviour
         {
             ISelectable select;
             //did we hit something that is Selectable?
-            if (hit.transform.gameObject.TryGetComponent<ISelectable>(out select))
+            if (hit.transform.gameObject.TryGetComponent(out select))
             {
                 //hover over that object
                 currentObject = select;
@@ -213,6 +215,7 @@ public class Player : MonoBehaviour
 
         (holdingObject as MonoBehaviour).transform.parent = null; //unparent object from hand
         holdingObject.IsSelected = false;
+        holdingObject.IsHovered = false;
         hand.GetComponent<Joint>().connectedBody = null; //Unlink object from hand
 
         //renable collisions between object and player
