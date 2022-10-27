@@ -1,0 +1,62 @@
+#preloader {
+  background-color: black;
+  color: white;
+  height: 100vh;
+  width: 100%;
+}
+
+#preloaderContainer {
+  background-color: black;
+  color: white;
+  height: 100vh;
+  width: 100%;
+  text-align: center;
+}
+
+#loadingText {
+  color: var(--font-color-normal);
+  padding: 1rem 0;
+}
+
+@-webkit-keyframes line {
+  from {
+    background-position: -150px 0;
+  }
+  to {
+    background-position: 150px 0;
+  }
+}
+@keyframes line {
+  from {
+    background-position: -150px 0;
+  }
+  to {
+    background-position: 150px 0;
+  }
+}
+
+.line:before {
+  -webkit-animation: line 0.75s infinite alternate ease-in-out;
+  animation: line 0.75s infinite alternate ease-in-out;
+  background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    from(var(--loader-color)),
+    to(var(--loader-color))
+  );
+  background: linear-gradient(
+    90deg,
+    var(--loader-color),
+    var(--loader-color),
+    var(--loader-color)
+  );
+  background-repeat: no-repeat;
+  background-size: 150px 50px;
+  content: "";
+  display: block;
+  height: 50px;
+  width: 150px;
+
+  border-radius: 8px;
+}

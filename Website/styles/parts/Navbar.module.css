@@ -1,0 +1,18 @@
+#navbar {
+  position: fixed;
+  z-index: 100;
+  width: 100%;
+  height: 70px;
+  transition: background-color 0.2s ease-in-out;
+  color: red;
+}
+
+#navbar:hover,
+#navbar.blackBg {
+  background-color: black;
+}
+
+.navbarContainer {
+  height: 100%;
+  color: var(--icon-color);
+}
