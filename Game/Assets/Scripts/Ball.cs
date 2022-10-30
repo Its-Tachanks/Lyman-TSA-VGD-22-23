@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ball : MonoBehaviour, ISelectable
+public class Ball : MonoBehaviour, IStorable
 {
     private bool isHovered;
-    public bool IsHovered //Implementation of ISelectable
+    public bool IsHovered //Implementation of IStorable
     {
         get
         {
@@ -34,7 +34,7 @@ public class Ball : MonoBehaviour, ISelectable
     }
 
     private bool isSelected;
-    public bool IsSelected //Implementation of ISelectable
+    public bool IsSelected //Implementation of IStorable
     {
         get
         {
@@ -46,8 +46,12 @@ public class Ball : MonoBehaviour, ISelectable
 
             if (isSelected) //OnSelect
             {
-                rend.material.color = selectedColor;
-                Player.instance.Pickup(this);
+                if (!Player.instance.Store(this))
+                {
+                    isSelected = false;
+                    return;
+                }
+                rend.material.color = selectedColor;              
             }
             else //OnDeselect
             {
@@ -63,6 +67,9 @@ public class Ball : MonoBehaviour, ISelectable
             }
         }
     }
+
+    [field: SerializeField] public Sprite InventoryIcon { get; set; }
+    public LayerMask DefaultLayer { get; set; }
 
     [SerializeField] private Rigidbody rb;
     [SerializeField] private MeshRenderer rend;
@@ -80,6 +87,7 @@ public class Ball : MonoBehaviour, ISelectable
         if (rend == null) rend = GetComponent<MeshRenderer>();
 
         defaultColor = rend.material.color;
+        DefaultLayer = gameObject.layer;
     }
 
 

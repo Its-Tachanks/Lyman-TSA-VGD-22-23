@@ -56,11 +56,13 @@ public class Player : MonoBehaviour
     }
 
     [Header("Selection")] 
-    [SerializeField] private GameObject hand;
+    [SerializeField] public GameObject hand;
     [SerializeField, Range(0, 100)] private float selectionRange;
     [SerializeField, Range(1, 100)] private float pickupSpeed;
     private ISelectable currentObject;
+    private bool isHovering;
     private ISelectable holdingObject;
+    [SerializeField] private LayerMask holdingLayer;
 
     [Header("Jumping")]
     [SerializeField, Range(0.01f, 1)] private float feetRadius;
@@ -115,7 +117,7 @@ public class Player : MonoBehaviour
             }
             else
             {
-                UnSelectObject();
+                if (!isHovering) UnSelectObject();
                 if (currentObject != null) SelectObject();
             }
         }
@@ -171,7 +173,7 @@ public class Player : MonoBehaviour
         //Create a ray from the camera to where the mouse is pointing
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, selectionRange)) //did we hit something?
+        if (Physics.Raycast(ray, out hit, selectionRange, ~holdingLayer)) //did we hit something?
         {
             ISelectable select;
             //did we hit something that is Selectable?
@@ -182,15 +184,19 @@ public class Player : MonoBehaviour
                 //hover over that object
                 currentObject = select;
                 currentObject.IsHovered = true;
+
+                isHovering = true;
             }
             else
             {
                 UnHover();
+                isHovering = false;
             }
         }
         else
         {
             UnHover();
+            isHovering = false;
         }
     }
 
@@ -211,26 +217,66 @@ public class Player : MonoBehaviour
 
     void UnSelectObject()
     {
-        if (hand.GetComponent<Joint>().connectedBody == null) return;
+        if (holdingObject == null && hand.GetComponent<Joint>().connectedBody == null) return;
+
+        Rigidbody oRb;
+        if ((holdingObject as MonoBehaviour).TryGetComponent(out oRb))
+        {
+            oRb.isKinematic = false;
+        }
 
         (holdingObject as MonoBehaviour).transform.parent = null; //unparent object from hand
         holdingObject.IsSelected = false;
         holdingObject.IsHovered = false;
-        hand.GetComponent<Joint>().connectedBody = null; //Unlink object from hand
+
+        if (holdingObject is IStorable) (holdingObject as MonoBehaviour).gameObject.layer = (holdingObject as IStorable).DefaultLayer;
+
+        hand.GetComponent<Joint>().connectedBody = null; //Unlink object from hand      
 
         //renable collisions between object and player
         MyFunctions.IgnoreAllCollisions(transform, (holdingObject as MonoBehaviour).transform, false);
         
         holdingObject = null;
+
+        Inventory.instance.DropObject();
     }
 
+    public bool Store(IStorable obj)
+    {
+        bool success = Inventory.instance.Store(obj);
+
+        if (!success)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public void PocketObject()
+    {
+        if (hand.GetComponent<Joint>().connectedBody == null) return;
+
+        (holdingObject as MonoBehaviour).transform.parent = null; //unparent object from hand
+        hand.GetComponent<Joint>().connectedBody = null; //Unlink object from hand
+
+        //renable collisions between object and player
+        MyFunctions.IgnoreAllCollisions(transform, (holdingObject as MonoBehaviour).transform, false);
+
+        (holdingObject as MonoBehaviour).gameObject.SetActive(false);
+        (holdingObject as MonoBehaviour).transform.position += Vector3.up * 100;
+
+        holdingObject = null;
+    }
 
     public void Pickup(ISelectable obj)
     {
         holdingObject = obj;
+        if (!obj.IsSelected) obj.IsSelected = true;
         MonoBehaviour objM = obj as MonoBehaviour;
         objM.transform.parent = hand.transform; //set object's parent to hand
         StartCoroutine(MoveObjectToOrigin(objM.transform));
+        objM.gameObject.layer = (int)Mathf.Log(holdingLayer, 2);
 
         //ignore collisions between object and player
         MyFunctions.IgnoreAllCollisions(transform, objM.transform);
@@ -238,8 +284,12 @@ public class Player : MonoBehaviour
 
     IEnumerator MoveObjectToOrigin(Transform obj)
     {
-        Rigidbody oRb = obj.gameObject.GetComponent<Rigidbody>();
-        oRb.isKinematic = true; //obj is not affected by forces
+        Rigidbody oRb = null;
+        if (obj.gameObject.GetComponent<Rigidbody>() != null)
+        {
+            oRb = obj.gameObject.GetComponent<Rigidbody>();
+            oRb.isKinematic = true; //obj is not affected by forces
+        }
         /*
          * while the object isnt close enough to hand
          * move the object a little closer evey frame
@@ -251,8 +301,8 @@ public class Player : MonoBehaviour
         }
         //close enough now
         obj.localPosition = Vector3.zero; //set actual position to (0,0,0) instead of close enough
-        oRb.isKinematic = false; //renable forces on obj
-        hand.GetComponent<Joint>().connectedBody = oRb; //link obj to hand
+        //if (oRb != null) oRb.isKinematic = false; //renable forces on obj
+        if (oRb != null) hand.GetComponent<Joint>().connectedBody = oRb; //link obj to hand
     }
 
     void CheckForGround()
