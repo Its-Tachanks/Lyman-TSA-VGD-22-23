@@ -4,9 +4,22 @@ using UnityEngine;
 
 public class Rail : MonoBehaviour
 {
+    [Header("Type")]
+    public MineType type;
+    [SerializeField] private Renderer[] typeAffectedParts;
+
+    [Header("Rotation")]
     private Minecart currentCart;
     private bool isRotating;
     [SerializeField] private float rotateSpeed = 1f;
+
+    public void AssignTypeMat(Material mat)
+    {
+        foreach (Renderer ren in typeAffectedParts)
+        {
+            ren.material = mat;
+        }
+    }
 
     [ContextMenu("Rotate")]
     public void Rotate(float angle, CartRotateSwitch cartSwitch)

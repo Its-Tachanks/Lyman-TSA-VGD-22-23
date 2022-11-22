@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class CartRotateSwitch : Switch
 {
-    [SerializeField] private Rail[] assignedRails;
+    [Header("Type")]
+    public MineType type;
+    private List<Rail> assignedRails = new List<Rail>();
 
     [Header("Graphics")]
     [SerializeField] private Renderer rend;
@@ -19,10 +21,15 @@ public class CartRotateSwitch : Switch
         rend.material.color = offColor;
     }
 
+    public void AddRail(Rail r)
+    {
+        assignedRails.Add(r);
+    }
+
     public void NotifySwitch()
     {
         finishedRails++;
-        if (finishedRails >= assignedRails.Length) isRotating = false;
+        if (finishedRails >= assignedRails.Count) isRotating = false;
     }
 
     protected override void OnSelect()
