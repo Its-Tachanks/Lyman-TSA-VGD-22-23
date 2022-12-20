@@ -4826,7 +4826,7 @@ GameObject:
   - component: {fileID: 8387827339391774128}
   - component: {fileID: 7827795782515253145}
   - component: {fileID: 2870179725487929383}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CheckMark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5134,7 +5134,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 928
+  m_VersionIndex: 931
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -5269,8 +5269,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 2, z: 2}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 2.5517278, y: 2, z: 2}
+  m_Center: {x: -0.7758635, y: 0, z: 0}
 --- !u!1 &9178637625414612736
 GameObject:
   m_ObjectHideFlags: 0
