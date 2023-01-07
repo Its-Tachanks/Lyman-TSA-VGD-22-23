@@ -62,6 +62,7 @@ public class Player : MonoBehaviour
     private bool isHovering;
     private ISelectable holdingObject;
     [SerializeField] private LayerMask holdingLayer;
+    [SerializeField] private LayerMask ignoreLayers;
 
     [Header("Jumping")]
     [SerializeField, Range(0.01f, 1)] private float feetRadius;
@@ -162,7 +163,9 @@ public class Player : MonoBehaviour
         yaw += horizontalRotateSpeed * Input.GetAxis("Mouse X");
         pitch -= verticalRotateSpeed * Input.GetAxis("Mouse Y");
 
-        cam.transform.localEulerAngles = new Vector3(Mathf.Clamp(pitch, pitchBounds.x, pitchBounds.y), 0f, 0f);
+        pitch = Mathf.Clamp(pitch, pitchBounds.x, pitchBounds.y);
+
+        cam.transform.localEulerAngles = new Vector3(pitch, 0f, 0f);
         transform.eulerAngles = new Vector3(0f, yaw, 0f);
     }
 
@@ -172,7 +175,7 @@ public class Player : MonoBehaviour
         //Create a ray from the camera to where the mouse is pointing
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, selectionRange, ~holdingLayer)) //did we hit something?
+        if (Physics.Raycast(ray, out hit, selectionRange, ~ignoreLayers)) //did we hit something?
         {
             ISelectable select;
             //did we hit something that is Selectable?

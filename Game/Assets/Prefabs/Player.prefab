@@ -46,8 +46,8 @@ Camera:
   m_GameObject: {fileID: 6597111767469874139}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.49056602, g: 0.12863119, b: 0.0069419593, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -379,7 +379,7 @@ MonoBehaviour:
   feet: {fileID: 6597111769024785858}
   horizontalRotateSpeed: 5
   verticalRotateSpeed: 5
-  pitchBounds: {x: -60, y: 60}
+  pitchBounds: {x: -80, y: 60}
   moveSpeed: 2.5
   airSpeed: 1.75
   shiftMultiplier: 2
@@ -393,10 +393,13 @@ MonoBehaviour:
   holdingLayer:
     serializedVersion: 2
     m_Bits: 128
+  ignoreLayers:
+    serializedVersion: 2
+    m_Bits: 1152
   feetRadius: 0.15
   groundLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 1088
   jumpCooldown: 0.1
   jumpForce: 40
 --- !u!1 &6597111769024785859

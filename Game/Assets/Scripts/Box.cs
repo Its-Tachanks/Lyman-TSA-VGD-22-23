@@ -1,60 +1,66 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Box : MonoBehaviour, IStorable {
-  [field: SerializeField] public Sprite InventoryIcon { get; set; }
-  public LayerMask DefaultLayer { get; set; }
-  private bool isHovered;
-  public bool IsHovered //Implementation of IStorable
-  {
-    get {
-      return isHovered;
-    }
-    set {
-      isHovered = value;
-
-      if (isHovered && !isSelected) //OnHover
-      {
-
-      }
-      else //OnUnHover
-      {
-
-      }
-    }
-  }
-
-  private bool isSelected;
-  public bool IsSelected //Implementation of IStorable
-  {
-    get {
-      return isSelected;
-    }
-    set {
-      isSelected = value;
-
-      if (isSelected) //OnSelect
-      {
-        if (!Player.instance.Store(this)) {
-          isSelected = false;
-          return;
+public class Box : MonoBehaviour, IStorable
+{
+    [field: SerializeField] public Sprite InventoryIcon { get; set; }
+    public LayerMask DefaultLayer { get; set; }
+    private bool isHovered;
+    public bool IsHovered //Implementation of IStorable
+    {
+        get
+        {
+            return isHovered;
         }
-      }
-      else //OnDeselect
-      {
+        set
+        {
+            isHovered = value;
 
-      }
+            if (isHovered && !isSelected) //OnHover
+            {
+
+            }
+            else //OnUnHover
+            {
+
+            }
+        }
     }
-  }
 
-  // Start is called before the first frame update
-  void Start() {
-    DefaultLayer = gameObject.layer;
-  }
+    private bool isSelected;
+    public bool IsSelected //Implementation of IStorable
+    {
+        get
+        {
+            return isSelected;
+        }
+        set
+        {
+            isSelected = value;
 
-  // Update is called once per frame
-  void Update() {
+            if (isSelected) //OnSelect
+            {
+                if (!Player.instance.Store(this))
+                {
+                    isSelected = false;
+                    return;
+                }
+            }
+            else //OnDeselect
+            {
 
-  }
+            }
+        }
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        DefaultLayer = gameObject.layer;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
 }

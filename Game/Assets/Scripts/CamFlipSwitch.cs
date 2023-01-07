@@ -15,11 +15,13 @@ public class CamFlipSwitch : Switch
     protected override void OnSelect()
     {
         cam.gameObject.SetActive(true);
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
     protected override void OnDeselect()
     {
         cam.gameObject.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()

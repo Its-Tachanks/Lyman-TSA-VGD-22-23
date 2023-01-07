@@ -12,12 +12,13 @@ public class RideCart : MonoBehaviour, ISelectable
     [Header("Keys")]
     [SerializeField] private KeyCode exitKey;
     [SerializeField] private KeyCode forwardKey = KeyCode.W;
-    [SerializeField] private KeyCode backKey = KeyCode.S;
+    [SerializeField] private KeyCode brakeKey = KeyCode.S;
 
     [Header("Zoom Zoom bitch")]
     [SerializeField] private float zoom;
-    [SerializeField, Range(0, 1)] private float airNoZoom;
+    [SerializeField] private float fallZoom;
     [SerializeField] private Rigidbody rb;
+
 
     [Header("Grounding")]
     [SerializeField] private Transform feet;
@@ -26,7 +27,6 @@ public class RideCart : MonoBehaviour, ISelectable
     private bool isGrounded;
 
     private bool isPlayerIn;
-    private Vector3 targetUp;
 
     private bool isHovered;
     public bool IsHovered //Implementation of IStorable
@@ -72,34 +72,19 @@ public class RideCart : MonoBehaviour, ISelectable
         }
     }
 
-    private float Zoom
-    {
-        get
-        {
-            if (isGrounded)
-            {
-                return zoom;
-            }
-            else
-            {
-                return zoom * airNoZoom; 
-            }
-        }
-    }
-
 
     private void Start()
     {
         if (rb == null) rb = GetComponent<Rigidbody>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (isPlayerIn) PlayerInActions();
 
         CheckForGround();
 
-        transform.right = new Vector3(transform.right.x, Mathf.Clamp(transform.right.y, -0.75f, 1f), transform.right.z);
+        transform.forward = new Vector3(transform.forward.x, Mathf.Clamp(transform.forward.y, -0.75f, 1f), transform.forward.z);
     }
 
     private void CheckForGround()
@@ -120,16 +105,19 @@ public class RideCart : MonoBehaviour, ISelectable
             UnlockPlayer();
         }
 
-
-        int dir = 0;
-        if (Input.GetKey(forwardKey)) dir++;
-        if (Input.GetKey(backKey)) dir--;
-        rb.AddForce(new Vector3(transform.right.x,(isGrounded ? transform.right.y : 0f) , transform.right.z) * dir * Zoom, ForceMode.Force);
-
-        if ((new Vector3 (rb.velocity.x, 0f, rb.velocity.z).normalized - transform.right).magnitude > 1f)
+        if (Input.GetKey(forwardKey))
         {
-            rb.velocity = new Vector3(0f, rb.velocity.y, 0f);
+            rb.AddRelativeForce(new Vector3(Vector3.forward.x, 0, Vector3.forward.z) * zoom);
         }
+        else if (Input.GetKey(brakeKey))
+        {
+            rb.AddRelativeForce(new Vector3(Vector3.forward.x, 0, Vector3.forward.z) * -zoom);
+        }
+        Vector3 localVelocity = transform.InverseTransformDirection(rb.velocity);
+        localVelocity.x = 0;
+        rb.velocity = transform.TransformDirection(localVelocity);
+
+        rb.AddForce(Vector3.down * fallZoom);
 
         if (Input.GetKeyDown(KeyCode.Space)) Boost();
     }
@@ -171,7 +159,7 @@ public class RideCart : MonoBehaviour, ISelectable
             if (hit1.transform.gameObject.Equals(hit2.transform.gameObject) && hit1.transform.TryGetComponent(out ring))
             {
                 Debug.Log("Boost");
-                rb.AddForce(new Vector3(transform.right.x, 0f, transform.right.z) * ring.GetBoost(), ForceMode.Impulse);
+                rb.AddForce(new Vector3(transform.forward.x, 0f, transform.forward.z) * ring.GetBoost(), ForceMode.Impulse);
                 return;
             }
         }
