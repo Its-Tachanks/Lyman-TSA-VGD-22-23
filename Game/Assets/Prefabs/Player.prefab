@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6597111767469874142}
   - component: {fileID: 6597111767469874143}
   - component: {fileID: 8261925221077649517}
+  - component: {fileID: 426417106}
   m_Layer: 8
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -65,7 +66,7 @@ Camera:
   field of view: 60
   orthographic: 0
   orthographic size: 5
-  m_Depth: -1
+  m_Depth: 1
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -179,6 +180,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: 95703b29f49b899499233ea7308bb800, type: 3}
   BlockCount: 256
+--- !u!114 &426417106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6597111767469874139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
 --- !u!1 &6597111767635181063
 GameObject:
   m_ObjectHideFlags: 0
@@ -257,6 +291,7 @@ GameObject:
   - component: {fileID: 6597111767800296459}
   - component: {fileID: 6597111767800296452}
   - component: {fileID: 6597111767800296453}
+  - component: {fileID: 168416174486904875}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -402,6 +437,25 @@ MonoBehaviour:
     m_Bits: 1088
   jumpCooldown: 0.1
   jumpForce: 40
+--- !u!114 &168416174486904875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6597111767800296454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c4de284cf1c5cc45bb104e6495923b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  underWaterDrag: 3
+  underWaterAngularDrag: 1
+  rb: {fileID: 6597111767800296452}
+  floatingPower: 200
+  floaters:
+  - {fileID: 6597111767800296456}
+  currentBody: {fileID: 0}
 --- !u!1 &6597111769024785859
 GameObject:
   m_ObjectHideFlags: 0
@@ -445,6 +499,7 @@ GameObject:
   - component: {fileID: 6597111769195467714}
   - component: {fileID: 6597111769195467712}
   - component: {fileID: 6597111769195467713}
+  - component: {fileID: 983959550}
   m_Layer: 8
   m_Name: HoldingCam
   m_TagString: Untagged
@@ -587,3 +642,36 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   priority: 0
+--- !u!114 &983959550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6597111769195467837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
