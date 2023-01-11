@@ -206,6 +206,63 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 49183594}
   m_Mesh: {fileID: -1550514412580984892, guid: cd962e27fda8cb541bedfa9d51006607, type: 3}
+--- !u!1001 &90388261
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 965511168719600904, guid: 98dccc2bbec255f4d93ac5510b0ab8d5, type: 3}
+      propertyPath: m_Name
+      value: Global Volume
+      objectReference: {fileID: 0}
+    - target: {fileID: 965511168719600910, guid: 98dccc2bbec255f4d93ac5510b0ab8d5, type: 3}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 965511168719600910, guid: 98dccc2bbec255f4d93ac5510b0ab8d5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -20.580286
+      objectReference: {fileID: 0}
+    - target: {fileID: 965511168719600910, guid: 98dccc2bbec255f4d93ac5510b0ab8d5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -7.1150713
+      objectReference: {fileID: 0}
+    - target: {fileID: 965511168719600910, guid: 98dccc2bbec255f4d93ac5510b0ab8d5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -40.837738
+      objectReference: {fileID: 0}
+    - target: {fileID: 965511168719600910, guid: 98dccc2bbec255f4d93ac5510b0ab8d5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 965511168719600910, guid: 98dccc2bbec255f4d93ac5510b0ab8d5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 965511168719600910, guid: 98dccc2bbec255f4d93ac5510b0ab8d5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 965511168719600910, guid: 98dccc2bbec255f4d93ac5510b0ab8d5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 965511168719600910, guid: 98dccc2bbec255f4d93ac5510b0ab8d5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 965511168719600910, guid: 98dccc2bbec255f4d93ac5510b0ab8d5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 965511168719600910, guid: 98dccc2bbec255f4d93ac5510b0ab8d5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 98dccc2bbec255f4d93ac5510b0ab8d5, type: 3}
 --- !u!1001 &125295526
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -786,6 +843,7 @@ GameObject:
   m_Component:
   - component: {fileID: 255645006}
   - component: {fileID: 255645005}
+  - component: {fileID: 255645007}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -870,6 +928,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &255645007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 255645004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &292318685
 GameObject:
   m_ObjectHideFlags: 0
@@ -2685,6 +2763,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1485581572}
   - component: {fileID: 1485581573}
+  - component: {fileID: 1485581574}
   m_Layer: 0
   m_Name: Sun
   m_TagString: Untagged
@@ -2769,6 +2848,26 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &1485581574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1485581571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &1502936944
 GameObject:
   m_ObjectHideFlags: 0
@@ -2779,6 +2878,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1502936945}
   - component: {fileID: 1502936946}
+  - component: {fileID: 1502936947}
   m_Layer: 0
   m_Name: Sun.001
   m_TagString: Untagged
@@ -2863,6 +2963,26 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &1502936947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1502936944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &1505841652
 GameObject:
   m_ObjectHideFlags: 0

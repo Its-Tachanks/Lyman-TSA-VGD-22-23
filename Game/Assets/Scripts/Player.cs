@@ -219,6 +219,12 @@ public class Player : MonoBehaviour
 
     void UnSelectObject()
     {
+        if (holdingObject is FishingRod)
+        {
+            (holdingObject as FishingRod).OnClick();
+            return;
+        }
+
         if (holdingObject == null && hand.GetComponent<Joint>().connectedBody == null) return;
 
         Rigidbody oRb;
@@ -305,6 +311,11 @@ public class Player : MonoBehaviour
         obj.localPosition = Vector3.zero; //set actual position to (0,0,0) instead of close enough
                                           //if (oRb != null) oRb.isKinematic = false; //renable forces on obj
         if (oRb != null) hand.GetComponent<Joint>().connectedBody = oRb; //link obj to hand
+        
+        if (obj.GetComponent<FishingRod>())
+        {
+            obj.GetComponent<FishingRod>().SetHoldingTransform();
+        }
     }
 
     void CheckForGround()
