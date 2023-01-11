@@ -9,6 +9,8 @@ public class WaterBody : MonoBehaviour
 
     private Collider collider;
 
+    public FishingHoleData holeData;
+
     private void Start()
     {
         collider = GetComponent<Collider>();

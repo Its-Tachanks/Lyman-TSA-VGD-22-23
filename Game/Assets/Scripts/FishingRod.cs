@@ -70,18 +70,28 @@ public class FishingRod : MonoBehaviour, IStorable
     [SerializeField] private Vector3 holdingLocalRotation;
 
     [SerializeField] private GameObject bobberPrefab;
-    private GameObject currentBobber;
+    private Bobber currentBobber;
 
     [SerializeField] private Transform castPoint;
     [SerializeField] private float castForce;
+    [SerializeField] private LineRenderer line;
+
+    [SerializeField] private float maxBobberDistance;
 
     // Start is called before the first frame update
     void Start()
     {
         if (outline == null) outline = GetComponent<QuickOutline>();
+        if (line == null) line = GetComponent<LineRenderer>();
 
         outline.enabled = false;
         DefaultLayer = gameObject.layer;
+    }
+
+    private void OnDisable()
+    {
+        if (currentBobber != null) Destroy(currentBobber.gameObject);
+        line.SetPositions(new Vector3[] { Vector3.zero, Vector3.zero });
     }
 
     public void OnClick()
@@ -90,11 +100,15 @@ public class FishingRod : MonoBehaviour, IStorable
         {
             CastBobber();
         }
+        else
+        {
+            currentBobber.ReturnToRod(castPoint);
+        }
     }
 
     private void CastBobber()
     {
-        currentBobber = Instantiate(bobberPrefab, castPoint.position, Quaternion.identity);
+        currentBobber = Instantiate(bobberPrefab, castPoint.position, Quaternion.identity).GetComponent<Bobber>();
 
         currentBobber.GetComponent<Rigidbody>().AddForce(Player.instance.transform.forward * castForce, ForceMode.Impulse);
     }
@@ -109,6 +123,18 @@ public class FishingRod : MonoBehaviour, IStorable
     // Update is called once per frame
     void Update()
     {
-        
+        if (currentBobber != null)
+        {
+            line.SetPositions(new Vector3[] { castPoint.position, currentBobber.GetAttatchmentPoint() });
+        }
+        else
+        {
+            line.SetPositions(new Vector3[] { Vector3.zero, Vector3.zero });
+        }
+
+        if (currentBobber != null && Vector3.Distance(castPoint.position, currentBobber.GetAttatchmentPoint()) > maxBobberDistance)
+        {
+            Destroy(currentBobber.gameObject);
+        }
     }
 }
